@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from .Player import Player
 
 class VBD:
     def __init__(self, league_size, team_size, file):

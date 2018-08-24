@@ -91,6 +91,15 @@ class VBD:
         player = projections.query(expression)
         return Player(player)
 
+    def top(num, position):
+        position = position.upper()
+        if position == "ALL":
+            top_players = self.projections.head(num)
+        else:
+            expression = "position == '" + position + "'"
+            top_players = self.projections.query(expression).head(num)
+        return convert_(top_players)
+
     def load(file):
         self.projections = pd.read_csv(file)
 
@@ -109,3 +118,6 @@ class VBD:
         if row["position"] == position:
             row["vbd"] *= multiplier
         return row
+
+    def convert_(df):
+        return [Player(row) for index, row in df.iterrows()]

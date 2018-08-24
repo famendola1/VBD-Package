@@ -69,10 +69,43 @@ class VBD:
 
         self.projections = projections
 
+    def draft(position):
+        position = position.upper()
+        if position == "ANY":
+            return Player(self.projections.head(1))
+        else:
+            expression = "position == '" + pos + "'"
+            players = self.projections.query(expression)
+            return Player(players.head(1))
+
+    def remove(player):
+        expression = "player != '" + player + "'"
+        self.projections.query(expr=expression, inplace=True)
+
+    def adjust(position, multiplier):
+        self.projections = self.projections.apply(func=adjust_, axis=1, args=(position, multiplier), result_type="broadcast")
+        self.projections.sort_values(by="vbd", inplace=True, ascending=False)
+
+    def search(player):
+        expression = "player == '" + player + "'"
+        player = projections.query(expression)
+        return Player(player)
+
+    def load(file):
+        self.projections = pd.read_csv(file)
+
+    def save(file):
+        self.projections.to_csv(file)
+
     def set_vbd_(row, replacements):
         row["vbd"] = row["points"] - replacements[row["position"]]
         return row
 
-    def set_paa_(row):
+    def set_paa_(row, averages):
         row["paa"] = row["vbd"] - averages[row["position"]]
+        return row
+
+    def adjust_(row, position, muliplier):
+        if row["position"] == position:
+            row["vbd"] *= multiplier
         return row

@@ -20,3 +20,58 @@ VBD also leaves out a lot of the nuance required to build a balanced team, and m
 You generate VBD rankings by creating projections for every player, setting a baseline at each position, then calculating the difference between the two for each player.
 
 For example, [insert RB] is projected to score 289.8 fantasy points. A standard 12 team league has 180 players drafted, and [the consensus ADP](https://www.fantasypros.com/nfl/adp/qb.php) shows X running backs being drafted in the top 180. That makes the (X+1)th running back, [insert RB] and his projected 67.1 fantasy points, the baseline for running backs using a VORP calculation. [first RB]’s VORP—his projected points minus [second RB]’s projected points—ends up a whopping 222.7.
+
+## Installation 
+```shell  
+$ pip install vbd  
+```
+
+## Usage
+```python  
+from vbd import VBD
+
+data = VBD(num_of_teams, num_players_per_team, data_file)
+```
+``` data_file ``` should be a CSV downloaded from http://apps.fantasyfootballanalytics.net/projections/, where you can use their standard projections or enter your league's settings to get more accurate results for your draft. If you create your own CSV you will need columns with headers: player, position, team, adp, and points.
+
+### Remove
+Remove a player from the dataset
+```python
+data.remove("player_name")
+```
+
+### Draft
+Get the best player at a given position
+```python
+data.draft(position) # position is one of [QB, RB, WR, TE, DST, K, ANY]
+```
+
+### Top
+Get the top n players at a given position
+```python
+data.top(n, position) # position is one of [QB, RB, WR, TE, DST, K, ALL]
+```
+
+### Search
+Search for a player in the dataset
+```python
+data.search("player_name")
+```
+
+### Adjust
+Adjust the VBD values for a position by a certain multiplier
+```python
+data.adjust(position, multiplier) # position is one of [QB, RB, WR, TE, DST, K]
+```
+
+### Load
+Load a data file
+```python
+data.load("filename")
+```
+
+### Save
+Save to a file
+```python
+data.save("filename")
+```

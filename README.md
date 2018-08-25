@@ -1,5 +1,5 @@
 # Fantasy Football Value Based Drafting
-Last Updated: 8/19/2018
+Last Updated: 8/25/2018
 
 ## [What is Value Based Drafting (VBD)?](https://www.fantasypros.com/2017/06/what-is-value-based-drafting/)
 If the goal were just to find the highest scoring players every year, you would draft a team full of quarterbacks—they were 23 of the top 30 in fantasy points last year. Obviously, no league is set up this way.

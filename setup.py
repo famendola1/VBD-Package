@@ -9,9 +9,10 @@ setuptools.setup(
     author="Fabio Amendola",
     author_email="fabio.amendola20@gmail.com",
     description="A package for value based drafting",
+    scripts=["bin/fantasy-draft"]
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/famendola1/VBD-Package",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

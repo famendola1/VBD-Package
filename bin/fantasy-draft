@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+
+import sys
+from vbd import VBD
+
+if __name__ == "__main__":
+    data = VBD(int(sys.argv[1]), int(sys.argv[2]), sys.argv[3])
+    data.save("original.csv")
+    while True:
+        print("> ", end=" ")
+        choice = input()
+        choice = choice.split(" ")
+        print()
+
+        if choice[0] == 'remove' or choice[0] == 'r':
+            if len(choice) == 3:
+                name = choice[1] + " " + choice[2]
+                name = name.strip()
+                expression = "player != '" + name + "'"
+                data.remove(name)
+                print(name + " was removed")
+                print()
+            else:
+                print("Invalid use of remove")
+                print()
+        elif choice[0] == 'adjust' or choice[0] == 'a':
+            if len(choice) == 3:
+                pos = choice[1].upper()
+                mult = float(choice[2])
+
+                data.adjust(pos, mult)
+                data.save("updated.csv")
+                print("VBD for " + pos + " was adjusted")
+                print()
+            else:
+                print("Invalid use of adjust")
+                print()
+        elif choice[0] == 'draft' or choice[0] == 'dr':
+            if len(choice) == 2:
+                pos = choice[1].upper()
+                print()
+                print(data.draft(pos))
+                print()
+            else:
+                print("Invalid use of draft")
+                print()
+        elif choice[0] == 'display' or choice[0] == 'di':
+            if len(choice) == 2:
+                pos = choice[1].upper()
+                print()
+                print(data.top(10, pos))
+                print()
+            else:
+                print("Invalid use of display")
+                print()
+        elif choice[0] == 'search' or choice[0] == 's':
+            if len(choice) == 3:
+                name = choice[1] + " " + choice[2]
+                name = name.strip()
+                print(data.search(name))
+                print()
+            else:
+                print("Invalid use of search")
+                print()
+        elif choice[0] == 'load' or choice[0] == 'l':
+            try:
+                data.load(choice[1])
+            except FileNotFoundError:
+                print("File not found")
+                print()
+        elif choice[0] == 'help' or choice[0] == 'h':
+            print("What would you like to do?")
+            print("-- Type 'remove [Player Name]' to remove a player")
+            print("-- Type 'adjust [position] [multiplier]' to adjust VBD")
+            print("-- Type 'draft [position]' to display the player to draft")
+            print(
+                "-- Type 'display [position]' to show the top 10 players available")
+            print("-- Type 'search [Player Name]' to search for a player")
+            print("-- Type 'load [file]' to load the data from this file")
+            print("-- Type 'help' to view this page")
+            print("-- Type 'exit' to leave")
+            print()
+        elif choice[0] == 'exit' or choice[0] == 'e':
+            print("Good Luck This Season :)")
+            break
+        else:
+            print("Invalid command. Type 'help' to view options.")
+            print()

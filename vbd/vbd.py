@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from .Player import Player
 
 class VBD:
     def __init__(self, league_size, team_size, file):
@@ -51,7 +50,7 @@ class VBD:
 
         projections["vbd"] = 0
         projections = projections.apply(
-            func=set_vbd_, axis=1, args=(replacements), result_type='broadcast')
+            func=self.set_vbd_, axis=1, args=(replacements,), result_type='broadcast')
         projections = projections.sort_values(by="vbd", ascending=False)
 
         # Calculate the points above average for vbd
@@ -66,59 +65,54 @@ class VBD:
 
         projections["paa"] = 0
         projections = projections.apply(
-            func=set_paa_, axis=1, args=(averages), result_type='broadcast')
+            func=self.set_paa_, axis=1, args=(averages,), result_type='broadcast')
 
         self.projections = projections
 
-    def draft(position):
+    def draft(self, position):
         position = position.upper()
         if position == "ANY":
-            return Player(self.projections.head(1))
+            return self.top(1, "ALL")
         else:
-            expression = "position == '" + pos + "'"
-            players = self.projections.query(expression)
-            return Player(players.head(1))
+            return self.top(1, position)
 
-    def remove(player):
+    def remove(self, player):
         expression = "player != '" + player + "'"
         self.projections.query(expr=expression, inplace=True)
 
-    def adjust(position, multiplier):
-        self.projections = self.projections.apply(func=adjust_, axis=1, args=(position, multiplier), result_type="broadcast")
+    def adjust(self, position, multiplier):
+        self.projections = self.projections.apply(func=self.adjust_, axis=1, args=(position, multiplier), result_type="broadcast")
         self.projections.sort_values(by="vbd", inplace=True, ascending=False)
 
-    def search(player):
+    def search(self, player):
         expression = "player == '" + player + "'"
         player = projections.query(expression)
         return Player(player)
 
-    def top(num, position):
+    def top(self, num, position):
         position = position.upper()
         if position == "ALL":
             top_players = self.projections.head(num)
         else:
             expression = "position == '" + position + "'"
             top_players = self.projections.query(expression).head(num)
-        return convert_(top_players)
+        return top_players
 
-    def load(file):
+    def load(self, file):
         self.projections = pd.read_csv(file)
 
-    def save(file):
+    def save(self, file):
         self.projections.to_csv(file)
 
-    def set_vbd_(row, replacements):
+    def set_vbd_(self, row, replacements,):
         row["vbd"] = row["points"] - replacements[row["position"]]
         return row
 
-    def set_paa_(row, averages):
+    def set_paa_(self, row, averages):
         row["paa"] = row["vbd"] - averages[row["position"]]
         return row
 
-    def adjust_(row, position, muliplier):
+    def adjust_(self, row, position, muliplier):
         if row["position"] == position:
             row["vbd"] *= multiplier
         return row
-
-    def convert_(df):
-        return [Player(row) for index, row in df.iterrows()]

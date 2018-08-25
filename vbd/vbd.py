@@ -70,6 +70,10 @@ class VBD:
         self.projections = projections
 
     def draft(self, position):
+        """Best to player to draft at given position
+        :param str position: The position to draft. [QB, RB, WR, TE, DST, K, ANY]
+        :return: a pandas DataFrame with one row
+        """
         position = position.upper()
         if position == "ANY":
             return self.top(1, "ALL")
@@ -77,19 +81,36 @@ class VBD:
             return self.top(1, position)
 
     def remove(self, player):
+        """Removes a player
+        :param str player: The name of the player as it appears in the data
+        :return: None
+        """
         expression = "player != '" + player + "'"
         self.projections.query(expr=expression, inplace=True)
 
     def adjust(self, position, multiplier):
+        """Adjust the VBD value of a certain position
+        :param str position: The position to modify. [QB, RB, WR, TE, DST, K]
+        :param float multiplier: The amount the multiply the VBD values by
+        :return: None
+        """
         self.projections = self.projections.apply(func=self.adjust_, axis=1, args=(position, multiplier), result_type="broadcast")
         self.projections.sort_values(by="vbd", inplace=True, ascending=False)
 
     def search(self, player):
+        """Search for a player
+        :param str player: The name of the player to search for
+        :return: a pandas Dataframe
+        """
         expression = "player == '" + player + "'"
-        player = projections.query(expression)
-        return Player(player)
+        return projections.query(expression)
 
     def top(self, num, position):
+        """Get the top n players of a position
+        :param int num: The cutoff from the top
+        :param str position: The desired position. [QB, RB, WR, TE, DST, K, ALL]
+        :return: a pandas DataFrame
+        """
         position = position.upper()
         if position == "ALL":
             top_players = self.projections.head(num)
@@ -99,12 +120,20 @@ class VBD:
         return top_players
 
     def load(self, file):
+        """Load a file
+        :param str file: The filename to load
+        :return: None
+        """
         self.projections = pd.read_csv(file)
 
     def save(self, file):
-        self.projections.to_csv(file)
+        """Save to a file
+        :param str file: The file to save to
+        :return: None
+        """
+        self.projections.to_csv(file, index=False)
 
-    def set_vbd_(self, row, replacements,):
+    def set_vbd_(self, row, replacements):
         row["vbd"] = row["points"] - replacements[row["position"]]
         return row
 

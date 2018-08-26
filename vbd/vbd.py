@@ -103,7 +103,7 @@ class VBD:
         :return: a pandas Dataframe
         """
         expression = "player == '" + player + "'"
-        return projections.query(expression)
+        return self.projections.query(expression)
 
     def top(self, num, position):
         """Get the top n players of a position

@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="vbd",
-    version="0.0.1",
+    version="0.0.2",
     author="Fabio Amendola",
     author_email="fabio.amendola20@gmail.com",
     description="A package for value based drafting",
-    scripts=["bin/fantasy-draft"]
+    scripts=["bin/fantasy-draft"],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/famendola1/VBD-Package",
